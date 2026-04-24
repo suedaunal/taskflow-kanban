@@ -1,7 +1,15 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import { DndContext, closestCenter, useDroppable } from "@dnd-kit/core";
+import {
+  DndContext,
+  closestCenter,
+  useDroppable,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  TouchSensor,
+} from "@dnd-kit/core";
 import { useEffect } from "react";
 import { supabase } from "@/app/lib/supabase";
 
@@ -59,31 +67,34 @@ function SortableCard({
   };
 
   return (
-  <div
-    ref={setNodeRef}
-    style={style}
-    className={`bg-black/40 text-white rounded-lg p-3 shadow-md border border-white/10 ${
-      isDragging ? "opacity-50" : ""
-    }`}
-  >
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className={`bg-black/40 text-white rounded-lg p-3 shadow-md border border-white/10 touch-none select-none cursor-grab active:cursor-grabbing ${
+        isDragging ? "opacity-50" : ""
+      }`}
+    >
       {isEditing ? (
         <div className="space-y-2">
           <input
             value={localTitle}
             onChange={(e) => setLocalTitle(e.target.value)}
-            className="w-full rounded border px-2 py-1 text-sm"
+            className="w-full rounded border px-2 py-1 text-sm text-slate-900"
             placeholder="Kart başlığı"
           />
 
           <textarea
             value={localDesc}
             onChange={(e) => setLocalDesc(e.target.value)}
-            className="w-full rounded border px-2 py-1 text-sm"
+            className="w-full rounded border px-2 py-1 text-sm text-slate-900"
             placeholder="Açıklama"
           />
 
           <div className="flex gap-2">
             <button
+              type="button"
               onClick={saveEdit}
               className="bg-green-600 text-white px-2 py-1 rounded text-xs"
             >
@@ -91,8 +102,9 @@ function SortableCard({
             </button>
 
             <button
+              type="button"
               onClick={() => setIsEditing(false)}
-              className="bg-slate-300 px-2 py-1 rounded text-xs"
+              className="bg-slate-300 text-slate-900 px-2 py-1 rounded text-xs"
             >
               İptal
             </button>
@@ -100,39 +112,31 @@ function SortableCard({
         </div>
       ) : (
         <div className="flex justify-between gap-2">
-          <button
-            type="button"
-            onClick={() => setIsEditing(true)}
-            className="text-left flex-1"
-          >
-           <p className="font-medium">{card.title}</p>
+          <div
+  onClick={(e) => {
+    e.stopPropagation();
+    setIsEditing(true);
+  }}
+  className="flex-1"
+>
+            <p className="font-medium">{card.title}</p>
             {card.description && (
               <p className="text-xs text-slate-300 mt-1">
                 {card.description}
               </p>
             )}
+          </div>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(card.id);
+            }}
+            className="text-xs text-red-300 hover:text-red-200"
+          >
+            Sil
           </button>
-
-         <button
-  type="button"
-  onClick={(e) => {
-    e.stopPropagation();
-    onDelete(card.id);
-  }}
-  className="text-xs text-red-600 hover:underline"
->
-  Sil
-</button>
-
-<button
-  type="button"
-  {...attributes}
-  {...listeners}
-  className="cursor-grab active:cursor-grabbing text-slate-400 px-2"
-  title="Drag card"
->
-  ⋮⋮
-</button>
         </div>
       )}
     </div>
@@ -218,6 +222,19 @@ const defaultColumns: Column[] = [
   const [newCardTitle, setNewCardTitle] = useState("");
   const [isAddingColumn, setIsAddingColumn] = useState(false);
 const [newColumnTitle, setNewColumnTitle] = useState("");
+const sensors = useSensors(
+  useSensor(PointerSensor, {
+    activationConstraint: {
+      distance: 8,
+    },
+  }),
+  useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 250,
+      tolerance: 5,
+    },
+  })
+);
 useEffect(() => {
   const fetchData = async () => {
     const {
@@ -502,7 +519,11 @@ if (newIndex === -1) {
   );
 };
   return (
-    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+    <DndContext
+  sensors={sensors}
+  collisionDetection={closestCenter}
+  onDragEnd={handleDragEnd}
+>
 
      <main className="min-h-screen bg-gradient-to-br from-purple-900 via-fuchsia-800 to-pink-700 text-white">
   <nav className="h-14 bg-black/30 backdrop-blur border-b border-white/10 flex items-center justify-between px-6">
