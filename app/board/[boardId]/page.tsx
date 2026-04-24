@@ -25,6 +25,7 @@ type Card = {
   id: string;
   title: string;
   description?: string;
+  priority?: "Low" | "Medium" | "High";
 };
 
 type Column = {
@@ -39,12 +40,20 @@ function SortableCard({
   onDelete,
 }: {
   card: Card;
-  onUpdate: (cardId: string, title: string, description: string) => void;
+  onUpdate: (
+  cardId: string,
+  title: string,
+  description: string,
+  priority: "Low" | "Medium" | "High"
+) => void;
   onDelete: (cardId: string) => void;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const [localTitle, setLocalTitle] = useState(card.title);
   const [localDesc, setLocalDesc] = useState(card.description || "");
+  const [localPriority, setLocalPriority] = useState<"Low" | "Medium" | "High">(
+  card.priority || "Medium"
+);
 
   const {
     attributes,
@@ -62,7 +71,7 @@ function SortableCard({
 
   const saveEdit = () => {
     if (!localTitle.trim()) return;
-    onUpdate(card.id, localTitle, localDesc);
+    onUpdate(card.id, localTitle, localDesc, localPriority);
     setIsEditing(false);
   };
 
@@ -91,7 +100,17 @@ function SortableCard({
             className="w-full rounded border px-2 py-1 text-sm text-slate-900"
             placeholder="Açıklama"
           />
-
+<select
+  value={localPriority}
+  onChange={(e) =>
+    setLocalPriority(e.target.value as "Low" | "Medium" | "High")
+  }
+  className="w-full rounded border px-2 py-1 text-sm text-slate-900"
+>
+  <option value="Low">Low Priority</option>
+  <option value="Medium">Medium Priority</option>
+  <option value="High">High Priority</option>
+</select>
           <div className="flex gap-2">
             <button
               type="button"
@@ -120,6 +139,17 @@ function SortableCard({
   className="flex-1"
 >
             <p className="font-medium">{card.title}</p>
+            <span
+  className={`inline-block mt-2 text-[10px] px-2 py-1 rounded-full ${
+    card.priority === "High"
+      ? "bg-red-500/80"
+      : card.priority === "Low"
+      ? "bg-green-500/80"
+      : "bg-yellow-500/80 text-black"
+  }`}
+>
+  {card.priority || "Medium"}
+</span>
             {card.description && (
               <p className="text-xs text-slate-300 mt-1">
                 {card.description}
@@ -222,6 +252,7 @@ const defaultColumns: Column[] = [
   const [newCardTitle, setNewCardTitle] = useState("");
   const [isAddingColumn, setIsAddingColumn] = useState(false);
 const [newColumnTitle, setNewColumnTitle] = useState("");
+const [searchTerm, setSearchTerm] = useState("");
 const sensors = useSensors(
   useSensor(PointerSensor, {
     activationConstraint: {
@@ -276,12 +307,13 @@ if (!columnsData || columnsData.length === 0) {
       id: col.id,
       title: col.title,
       cards: cardsData
-        .filter((card) => card.column_id === col.id)
-        .sort((a, b) => a.position - b.position)
-        .map((card) => ({
+        .filter((card: any) => card.column_id === col.id)
+.sort((a: any, b: any) => a.position - b.position)
+.map((card: any) => ({
   id: card.id,
   title: card.title,
   description: card.description,
+  priority: card.priority || "Medium",
 }))
     }));
 
@@ -304,7 +336,8 @@ const addCard = async (columnId: string) => {
       column_id: columnId,
       title: newCardTitle,
       description: "",
-      position: newPosition,
+priority: "Medium",
+position: newPosition,
     })
     .select()
     .single();
@@ -325,6 +358,7 @@ const addCard = async (columnId: string) => {
                 id: data.id,
                 title: data.title,
                 description: data.description,
+                priority: data.priority || "Medium",
               },
             ],
           }
@@ -371,14 +405,16 @@ const addColumn = async () => {
   const updateCard = async (
   cardId: string,
   title: string,
-  description: string
+  description: string,
+  priority: "Low" | "Medium" | "High"
 ) => {
   const { error } = await supabase
     .from("cards")
     .update({
-      title,
-      description,
-    })
+  title,
+  description,
+  priority,
+})
     .eq("id", cardId);
 
   if (error) {
@@ -391,7 +427,7 @@ const addColumn = async () => {
       ...column,
       cards: column.cards.map((card) =>
         card.id === cardId
-          ? { ...card, title, description }
+          ? { ...card, title, description, priority }
           : card
       ),
     }))
@@ -536,9 +572,11 @@ if (newIndex === -1) {
 
     <div className="flex items-center gap-3">
       <input
-        placeholder="Search"
-        className="hidden md:block bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 text-sm outline-none placeholder:text-slate-400"
-      />
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+  placeholder="Search cards..."
+  className="hidden md:block bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 text-sm outline-none placeholder:text-slate-400"
+/>
 
       <div className="w-8 h-8 rounded-full bg-pink-500 flex items-center justify-center text-sm font-bold">
         S
@@ -553,9 +591,15 @@ if (newIndex === -1) {
         <h1 className="text-3xl font-bold">{boardTitle}</h1>
       </div>
 
-      <button className="bg-white/15 hover:bg-white/25 px-4 py-2 rounded-lg text-sm">
-        Share
-      </button>
+      <button
+  onClick={() => {
+    navigator.clipboard.writeText(window.location.href);
+    alert("Board link copied!");
+  }}
+  className="bg-white/15 hover:bg-white/25 px-4 py-2 rounded-lg text-sm"
+>
+  Share
+</button>
     </div>
 
         <div className="flex gap-4 overflow-x-auto pb-4">
@@ -568,7 +612,15 @@ if (newIndex === -1) {
                 strategy={verticalListSortingStrategy}
               >
                 <div className="space-y-3">
-                  {column.cards.map((card) => (
+                  {column.cards
+  .filter((card) => {
+    const q = searchTerm.toLowerCase();
+    return (
+      card.title.toLowerCase().includes(q) ||
+      (card.description || "").toLowerCase().includes(q)
+    );
+  })
+  .map((card) => (
                    <SortableCard
   key={card.id}
   card={card}
