@@ -190,11 +190,11 @@ function DroppableColumn({
         column.title === "Backlog"
           ? "bg-purple-900/70"
           : column.title === "In Progress"
-         ? "bg-yellow-800/70"
+         ? "bg-pink-900/70"
           : column.title === "Review"
           ? "bg-yellow-800/70"
           : column.title === "Done"
-          ? "bg-black/70"
+          ? "bg-gray/20"
           : "bg-slate-800"
       } ${isOver ? "ring-2 ring-blue-400" : ""}`}
     >
@@ -253,7 +253,6 @@ const defaultColumns: Column[] = [
   const [isAddingColumn, setIsAddingColumn] = useState(false);
 const [newColumnTitle, setNewColumnTitle] = useState("");
 const [searchTerm, setSearchTerm] = useState("");
-
 const sensors = useSensors(
   useSensor(PointerSensor, {
     activationConstraint: {
