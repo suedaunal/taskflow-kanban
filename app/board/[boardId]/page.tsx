@@ -253,6 +253,10 @@ const defaultColumns: Column[] = [
   const [isAddingColumn, setIsAddingColumn] = useState(false);
 const [newColumnTitle, setNewColumnTitle] = useState("");
 const [searchTerm, setSearchTerm] = useState("");
+const logout = async () => {
+  await supabase.auth.signOut();
+  router.push("/login");
+};
 const sensors = useSensors(
   useSensor(PointerSensor, {
     activationConstraint: {
@@ -563,19 +567,32 @@ if (newIndex === -1) {
 
      <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#7c3aed,_#111827_45%,_#020617_100%)] text-white">
   <nav className="h-14 bg-black/30 backdrop-blur border-b border-white/10 flex items-center justify-between px-6">
-    <div className="flex items-center gap-3">
-      <div className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center font-bold">
-        T
-      </div>
-      <span className="font-bold text-lg">TaskFlow</span>
-    </div>
+    <div className="flex items-center gap-2 sm:gap-3">
+  <input
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    placeholder="Search..."
+    className="w-32 sm:w-56 bg-white/10 border border-white/20 rounded-xl px-3 sm:px-4 py-2 text-sm outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 transition"
+  />
+
+  <div className="w-8 h-8 rounded-full bg-pink-500 flex items-center justify-center text-sm font-bold shrink-0">
+    S
+  </div>
+
+  <button
+    onClick={logout}
+    className="bg-red-600 hover:bg-red-700 px-3 sm:px-4 py-2 rounded-xl text-sm transition shrink-0"
+  >
+    Logout
+  </button>
+</div>
 
     <div className="flex items-center gap-3">
       <input
   value={searchTerm}
   onChange={(e) => setSearchTerm(e.target.value)}
   placeholder="Search cards..."
-  className="hidden md:block bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-sm outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 transition"
+  className="w-36 sm:w-56 bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-sm outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 transition"
 />
 
       <div className="w-8 h-8 rounded-full bg-pink-500 flex items-center justify-center text-sm font-bold">
