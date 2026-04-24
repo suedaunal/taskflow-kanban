@@ -222,7 +222,7 @@ const fetchBoards = async () => {
 };
 
   return (
-  <main className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950 text-white">
+<main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#2563eb,_#111827_45%,_#020617_100%)] text-white">
     <nav className="h-14 bg-black/30 backdrop-blur border-b border-white/10 flex items-center justify-between px-6">
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center font-bold">
@@ -238,22 +238,24 @@ const fetchBoards = async () => {
         Logout
       </button>
     </nav>
-
-    <section className="p-8">
-      <div className="mb-8">
-        <p className="text-sm text-slate-400">Workspace</p>
-        <h1 className="text-3xl font-bold">Your Boards</h1>
-      </div>
+<section className="px-8 py-10">
+      <div className="mb-10">
+  <p className="text-sm text-blue-300 font-medium">Workspace</p>
+  <h1 className="text-4xl font-bold tracking-tight">Your Boards</h1>
+  <p className="text-slate-400 mt-2">
+    Create, organize and manage your project boards.
+  </p>
+</div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {boards.map((b) => (
           <Link
             key={b.id}
             href={`/board/${b.id}`}
-            className="h-32 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 p-4 flex flex-col justify-between transition shadow-lg"
+            className="h-36 rounded-2xl bg-white/10 hover:bg-white/15 border border-white/10 p-5 flex flex-col justify-between transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-[1.02] backdrop-blur-md"
           >
             <div>
-              <p className="text-lg font-semibold">{b.title}</p>
+              <p className="text-xl font-semibold tracking-tight">{b.title}</p>
               <p className="text-sm text-slate-400 mt-1">Kanban board</p>
             </div>
 
@@ -292,7 +294,7 @@ const fetchBoards = async () => {
         ) : (
           <button
             onClick={() => setInputOpen(true)}
-            className="h-32 rounded-2xl bg-blue-600/80 hover:bg-blue-600 border border-blue-400/30 p-4 text-lg font-semibold transition shadow-lg"
+            className="h-36 rounded-2xl bg-blue-600/90 hover:bg-blue-500 border border-blue-300/30 p-5 text-lg font-semibold transition-all duration-200 shadow-xl hover:shadow-2xl hover:scale-[1.02]"
           >
             + Yeni Board
           </button>

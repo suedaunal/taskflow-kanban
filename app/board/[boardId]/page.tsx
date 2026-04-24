@@ -81,9 +81,9 @@ function SortableCard({
       style={style}
       {...attributes}
       {...listeners}
-      className={`bg-black/40 text-white rounded-lg p-3 shadow-md border border-white/10 touch-none select-none cursor-grab active:cursor-grabbing ${
-        isDragging ? "opacity-50" : ""
-      }`}
+      className={`bg-black/45 text-white rounded-xl p-3 shadow-md border border-white/10 touch-none select-none cursor-grab active:cursor-grabbing hover:shadow-xl hover:scale-[1.02] transition-all duration-200 ${
+  isDragging ? "opacity-50 scale-105" : ""
+}`}
     >
       {isEditing ? (
         <div className="space-y-2">
@@ -186,15 +186,15 @@ function DroppableColumn({
   return (
     <section
       ref={setNodeRef}
-      className={`w-72 shrink-0 rounded-xl p-4 shadow-xl text-white border border-white/10 ${
+      className={`w-72 shrink-0 rounded-2xl p-4 shadow-2xl text-white border border-white/10 backdrop-blur-md ${
         column.title === "Backlog"
-          ? "bg-purple-900/80"
+          ? "bg-purple-900/70"
           : column.title === "In Progress"
-          ? "bg-yellow-800/80"
+         ? "bg-yellow-800/70"
           : column.title === "Review"
-          ? "bg-green-800/80"
+          ? "bg-yellow-800/70"
           : column.title === "Done"
-          ? "bg-black/80"
+          ? "bg-black/70"
           : "bg-slate-800"
       } ${isOver ? "ring-2 ring-blue-400" : ""}`}
     >
@@ -561,7 +561,7 @@ if (newIndex === -1) {
   onDragEnd={handleDragEnd}
 >
 
-     <main className="min-h-screen bg-gradient-to-br from-purple-900 via-fuchsia-800 to-pink-700 text-white">
+     <main className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#7c3aed,_#111827_45%,_#020617_100%)] text-white">
   <nav className="h-14 bg-black/30 backdrop-blur border-b border-white/10 flex items-center justify-between px-6">
     <div className="flex items-center gap-3">
       <div className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center font-bold">
@@ -575,7 +575,7 @@ if (newIndex === -1) {
   value={searchTerm}
   onChange={(e) => setSearchTerm(e.target.value)}
   placeholder="Search cards..."
-  className="hidden md:block bg-white/10 border border-white/10 rounded-lg px-3 py-1.5 text-sm outline-none placeholder:text-slate-400"
+  className="hidden md:block bg-white/10 border border-white/20 rounded-xl px-4 py-2 text-sm outline-none placeholder:text-slate-400 focus:ring-2 focus:ring-blue-500 transition"
 />
 
       <div className="w-8 h-8 rounded-full bg-pink-500 flex items-center justify-center text-sm font-bold">
@@ -588,7 +588,10 @@ if (newIndex === -1) {
     <div className="flex items-center justify-between mb-6">
       <div>
         <p className="text-sm text-slate-300">Workspace / Board</p>
-        <h1 className="text-3xl font-bold">{boardTitle}</h1>
+       <h1 className="text-3xl font-bold tracking-tight">{boardTitle}</h1>
+<p className="text-sm text-slate-400 mt-1">
+  Organize, prioritize and track your team tasks.
+</p>
       </div>
 
       <button
@@ -596,7 +599,7 @@ if (newIndex === -1) {
     navigator.clipboard.writeText(window.location.href);
     alert("Board link copied!");
   }}
-  className="bg-white/15 hover:bg-white/25 px-4 py-2 rounded-lg text-sm"
+ className="bg-white/15 hover:bg-white/25 px-4 py-2 rounded-xl text-sm border border-white/10 transition"
 >
   Share
 </button>
