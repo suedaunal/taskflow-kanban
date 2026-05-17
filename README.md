@@ -1,36 +1,188 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+TaskFlow — Kanban Task Management Application
 
-## Getting Started
+Live Demo
+https://taskflow-kanban-seven.vercel.app/
 
-First, run the development server:
+Project Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+TaskFlow is a Trello-inspired Kanban task management application developed to improve workflow visibility, task organization, and team coordination.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The application allows users to create boards, manage workflow columns, and organize tasks using a drag-and-drop interface. The project focused on building a responsive and user-friendly workflow management system with persistent task storage and real-time interaction support.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+Key Features
 
-To learn more about Next.js, take a look at the following resources:
+Board → Column → Card hierarchy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Drag-and-drop task management
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Persistent task ordering
 
-## Deploy on Vercel
+Responsive Kanban interface
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Authentication support
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Mobile-compatible interactions
+
+Default onboarding/demo boards
+
+Real-time workflow organization
+
+
+
+---
+
+Technical Stack
+
+Next.js
+
+React
+
+Supabase
+
+Vercel
+
+dnd-kit
+
+Tailwind CSS
+
+
+
+---
+
+System Architecture
+
+Frontend (Next.js + React)
+        ↓
+Drag & Drop Interaction Layer
+        ↓
+Supabase Database & Authentication
+        ↓
+Persistent Board / Task Management
+
+
+---
+
+Core Functionalities
+
+Kanban Workflow Management
+
+Users can:
+
+create boards
+
+manage workflow columns
+
+create and edit task cards
+
+move tasks between columns
+
+visually track task progress
+
+
+
+---
+
+Drag-and-Drop System
+
+The project uses dnd-kit to support:
+
+smooth drag-and-drop interactions
+
+task reordering
+
+cross-column movement
+
+persistent ordering after refresh
+
+
+
+---
+
+Persistent Data Management
+
+TaskFlow uses Supabase for:
+
+authentication
+
+board storage
+
+column management
+
+card persistence
+
+database synchronization
+
+
+All workflow states and task positions remain stored after refresh or re-login.
+
+
+---
+
+UI & User Experience Focus
+
+The project emphasized:
+
+workflow visibility
+
+clean task organization
+
+responsive interface design
+
+onboarding usability
+
+mobile interaction support
+
+
+Default demo boards and tasks were implemented to improve first-time user experience.
+
+
+---
+
+Challenges & Engineering Decisions
+
+Throughout development, several frontend and state-management challenges were addressed, including:
+
+drag-and-drop state synchronization
+
+persistent ordering logic
+
+Next.js hydration issues
+
+dynamic routing management
+
+mobile drag interaction handling
+
+
+The project required balancing UI responsiveness, database consistency, and drag-and-drop performance.
+
+
+---
+
+Deployment
+
+Frontend deployed via Vercel
+
+Backend services powered by Supabase
+
+
+
+---
+
+Key Learnings
+
+Full-stack workflow application development
+
+Drag-and-drop architecture with React
+
+State synchronization and persistence
+
+Database-driven UI management
+
+Responsive frontend design
+
+Authentication and backend integration
+
+Debugging complex frontend interaction issues
